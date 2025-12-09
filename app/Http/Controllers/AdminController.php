@@ -12,6 +12,44 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
+    // Organization Management
+    public function organizations()
+    {
+        $admin = session('admin');
+        if (!$admin) {
+            return redirect('/admin/login');
+        }
+        $organizations = User::where('role', 'ngo')->paginate(20);
+        return view('admin.organizations.index', compact('organizations'));
+    }
+
+    public function createOrganization()
+    {
+        $admin = session('admin');
+        if (!$admin) {
+            return redirect('/admin/login');
+        }
+        return view('admin.organizations.create');
+    }
+
+    public function storeOrganization(Request $request)
+    {
+        $admin = session('admin');
+        if (!$admin) {
+            return redirect('/admin/login');
+        }
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users|max:191',
+            'password' => 'required|string|min:6',
+            'bio' => 'nullable|string',
+        ]);
+        $validated['role'] = 'ngo';
+        $validated['password'] = Hash::make($validated['password']);
+        $org = User::create($validated);
+        ActivityLog::log('create_organization', 'user', $org->id, "Created organization: {$org->name}");
+        return redirect()->route('admin.organizations')->with('success', 'Organization created successfully');
+    }
     // User Management
     public function users()
     {

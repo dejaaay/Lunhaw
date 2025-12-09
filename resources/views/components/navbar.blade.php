@@ -13,10 +13,11 @@
     <!-- Admin Navigation -->
     @if(session('admin'))
       <div class="hidden md:flex items-center gap-6 text-sm text-neutral-700">
-        <a href="/admin" class="hover:text-neutral-900">Dashboard</a>
-        <a href="/trees" class="hover:text-neutral-900">All Trees</a>
-        <a href="/admin/sponsorships" class="hover:text-neutral-900">Sponsorships</a>
-        <a href="/insights" class="hover:text-neutral-900">Reports</a>
+  <a href="/admin" class="hover:text-neutral-900">Dashboard</a>
+  <a href="/trees" class="hover:text-neutral-900">All Trees</a>
+  <a href="/admin/organizations" class="hover:text-neutral-900">Organizations</a>
+  <a href="/admin/sponsorships" class="hover:text-neutral-900">Sponsorships</a>
+  <a href="/insights" class="hover:text-neutral-900">Reports</a>
       </div>
 
       <div class="flex items-center gap-2">
@@ -25,11 +26,22 @@
         <a href="/logout" class="px-3 py-2 rounded-md border border-neutral-300 text-sm hover:bg-neutral-50">Logout</a>
       </div>
 
+    <!-- Partner/NGO Navigation -->
+    @elseif(session('user') && session('user.role') === 'ngo')
+      <div class="hidden md:flex items-center gap-6 text-sm text-neutral-700">
+        <a href="/dashboard" class="hover:text-neutral-900">Dashboard</a>
+        <a href="/organization/insights" class="hover:text-neutral-900">Insights</a>
+        <a href="/trees" class="hover:text-neutral-900">All Trees</a>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="hidden md:inline text-neutral-600 text-sm">{{ session('user.name') ?? session('user.email') }}</span>
+        <a href="/dashboard" class="px-3 py-2 rounded-md bg-green-800 text-white text-sm hover:bg-green-900">Dashboard</a>
+        <a href="/logout" class="px-3 py-2 rounded-md border border-neutral-300 text-sm hover:bg-neutral-50">Logout</a>
+      </div>
     <!-- User Navigation -->
     @elseif(session('user'))
       <div class="hidden md:flex items-center gap-6 text-sm text-neutral-700">
         <a href="/trees" class="hover:text-neutral-900">Browse Trees</a>
-        <a href="/trees/map" class="hover:text-neutral-900">Map</a>
         <a href="/choose" class="hover:text-neutral-900">How It Works</a>
         <a href="/partners" class="hover:text-neutral-900">Partners</a>
         <a href="/insights" class="hover:text-neutral-900">Reports</a>
@@ -46,7 +58,6 @@
     @else
       <div class="hidden md:flex items-center gap-6 text-sm text-neutral-700">
         <a href="/trees" class="hover:text-neutral-900">Browse Trees</a>
-        <a href="/trees/map" class="hover:text-neutral-900">Map</a>
         <a href="/choose" class="hover:text-neutral-900">How It Works</a>
         <a href="/partners" class="hover:text-neutral-900">Partners</a>
         <a href="/insights" class="hover:text-neutral-900">Reports</a>

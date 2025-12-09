@@ -10,6 +10,33 @@ use Illuminate\Support\Facades\Storage;
 
 class TreeController extends Controller
 {
+
+    // Partner: Create tree form
+    public function partnerCreate()
+    {
+        $user = session('user');
+        if (!$user || ($user['role'] ?? null) !== 'ngo') {
+            return redirect('/login');
+        }
+        return view('partner.trees.create');
+    }
+
+    // Partner: Store tree
+    public function partnerStore(Request $request)
+    {
+        $user = session('user');
+        if (!$user || ($user['role'] ?? null) !== 'ngo') {
+            return redirect('/login');
+        }
+        $validated = $request->validate([
+            'species' => 'required|string|max:100',
+            'location' => 'required|string|max:150',
+            'planted_at' => 'nullable|date',
+        ]);
+        $validated['user_id'] = $user['id'];
+        $tree = Tree::create($validated);
+        return redirect('/dashboard')->with('success', 'Tree added successfully');
+    }
     // Browse trees
     public function index(Request $request)
     {
@@ -29,7 +56,14 @@ class TreeController extends Controller
 
         $trees = $query->paginate(12);
 
-        return view('trees.index', compact('trees'));
+        // Get unique species for dropdown
+        $speciesList = Tree::where('is_available', true)
+            ->select('species')
+            ->distinct()
+            ->orderBy('species')
+            ->pluck('species');
+
+        return view('trees.index', compact('trees', 'speciesList'));
     }
 
     // Show tree details

@@ -1,0 +1,8 @@
+{
+    "name": "Green Earth Org",
+    "email": "org@greenearth.org",
+    "password": "$2y$10$examplehashfororgaccount2025",
+    "role": "ngo",
+    "phone": "09123456789",
+    "address": "123 Eco Street, Cebu City"
+}

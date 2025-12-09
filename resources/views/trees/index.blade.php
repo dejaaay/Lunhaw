@@ -34,7 +34,12 @@
                 <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Species</label>
-                        <input type="text" name="species" value="{{ request('species') }}" placeholder="e.g., Mango" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <select name="species" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <option value="">All Species</option>
+                            @foreach($speciesList as $species)
+                                <option value="{{ $species }}" {{ request('species') == $species ? 'selected' : '' }}>{{ $species }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
@@ -73,6 +78,7 @@
                                 <p><strong>Location:</strong> {{ $tree->location ?? 'Not specified' }}</p>
                                 <p><strong>Status:</strong> <span class="px-2 py-1 rounded bg-blue-100 text-blue-800">{{ ucfirst($tree->status) }}</span></p>
                                 <p><strong>CO₂ Offset:</strong> {{ $tree->co2_offset }} kg</p>
+                                <p><strong>Partner/NGO:</strong> {{ $tree->manager?->name ?? 'N/A' }}</p>
                             </div>
                             @if($tree->activeAdoption)
                                 <p class="mt-4 px-3 py-2 bg-yellow-100 text-yellow-800 rounded text-sm">
@@ -82,12 +88,9 @@
                                 <div class="mt-4 flex gap-2">
                                     <a href="{{ route('trees.show', $tree) }}" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded text-center hover:bg-blue-700">View Details</a>
                                     @if(session('user'))
-                                        <form action="{{ route('adoptions.store', $tree) }}" method="POST" class="flex-1">
-                                            @csrf
-                                            <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Adopt</button>
-                                        </form>
+                                        <a href="{{ route('sponsorships.create', $tree) }}" class="flex-1 bg-green-600 text-white px-4 py-2 rounded text-center hover:bg-green-700">Sponsor</a>
                                     @else
-                                        <a href="/login" class="flex-1 bg-green-600 text-white px-4 py-2 rounded text-center hover:bg-green-700">Adopt</a>
+                                        <a href="/login" class="flex-1 bg-green-600 text-white px-4 py-2 rounded text-center hover:bg-green-700">Sponsor</a>
                                     @endif
                                 </div>
                             @endif

@@ -1,4 +1,12 @@
 <?php
+// Tree Photo Edit
+Route::get('/trees/{tree}/photos/{photo}/edit', [\App\Http\Controllers\TreePhotoController::class, 'edit'])->name('trees.photos.edit');
+Route::post('/trees/{tree}/photos/{photo}/update', [\App\Http\Controllers\TreePhotoController::class, 'update'])->name('trees.photos.update');
+// Organization Insights
+Route::get('/organization/insights', [\App\Http\Controllers\OrganizationInsightsController::class, 'index'])->name('organization.insights');
+// Partner/Organization Profile
+Route::get('/partner/profile/edit', [\App\Http\Controllers\PartnerProfileController::class, 'edit'])->name('partner.profile.edit');
+Route::post('/partner/profile/update', [\App\Http\Controllers\PartnerProfileController::class, 'update'])->name('partner.profile.update');
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -25,13 +33,15 @@ Route::get('/track', function () {
     return view('track');
 });
 
+use App\Models\User;
 Route::get('/partners', function () {
-    return view('partners');
+    $partners = User::where('role', 'ngo')->get();
+    return view('partners', compact('partners'));
 });
 
-Route::get('/insights', function () {
-    return view('insights');
-});
+use App\Http\Controllers\InsightsController;
+
+Route::get('/insights', [InsightsController::class, 'index'])->name('insights');
 
 Route::get('/rewards', function () {
     return view('rewards');
@@ -47,7 +57,21 @@ Route::post('/admin/login', [AuthController::class, 'adminLogin']);
 Route::get('/logout', [AuthController::class, 'logout']);
 
 // User Dashboard
-Route::get('/dashboard', [DashboardController::class, 'user']);
+// User/Partner Dashboard
+Route::get('/dashboard', function() {
+    $user = session('user');
+    if (!$user) return redirect('/login');
+    if (($user['role'] ?? null) === 'ngo') {
+        return app(\App\Http\Controllers\DashboardController::class)->partner();
+    }
+    return app(\App\Http\Controllers\DashboardController::class)->user();
+});
+
+// Partner Tree Management
+Route::middleware('web')->group(function () {
+    Route::get('/partner/trees/create', [TreeController::class, 'partnerCreate'])->name('partner.trees.create');
+    Route::post('/partner/trees', [TreeController::class, 'partnerStore'])->name('partner.trees.store');
+});
 
 // Tree Routes
 Route::get('/trees', [TreeController::class, 'index'])->name('trees.index');
@@ -85,6 +109,10 @@ Route::get('/admin/sponsorships', [SponsorshipController::class, 'adminIndex'])-
 
 // Admin Routes
 Route::middleware('web')->group(function () {
+    // Organization Management
+    Route::get('/admin/organizations', [AdminController::class, 'organizations'])->name('admin.organizations');
+    Route::get('/admin/organizations/create', [AdminController::class, 'createOrganization'])->name('admin.organizations.create');
+    Route::post('/admin/organizations', [AdminController::class, 'storeOrganization'])->name('admin.organizations.store');
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/admin/users/create', [AdminController::class, 'createUser'])->name('admin.users.create');

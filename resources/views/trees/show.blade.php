@@ -79,6 +79,9 @@
                                 @if($photo->photo_path)
                                     <img src="{{ asset('storage/' . $photo->photo_path) }}" alt="Growth photo" class="w-full h-64 object-cover rounded mt-2">
                                 @endif
+                                @if(session('user') && session('user.role') === 'ngo' && $tree->user_id === session('user.id'))
+                                    <a href="{{ route('trees.photos.edit', [$tree, $photo]) }}" class="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Edit Photo</a>
+                                @endif
                             </div>
                         @endforeach
                     </div>
@@ -113,11 +116,20 @@
             @else
                 <div class="bg-white rounded-lg shadow p-6 mb-6">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">Actions</h3>
-                    @if(session('user'))
-                        <form action="{{ route('adoptions.store', $tree) }}" method="POST" class="mb-3">
-                            @csrf
-                            <button type="submit" class="w-full bg-green-600 text-white px-4 py-3 rounded-lg font-bold hover:bg-green-700">🌱 Adopt This Tree</button>
-                        </form>
+                    @if(session('user') && session('user.role') === 'user')
+                        @php
+                            $isSponsor = \App\Models\Sponsorship::where('user_id', session('user.id'))->where('status', 'completed')->exists();
+                        @endphp
+                        @if($isSponsor)
+                            <form action="{{ route('adoptions.store', $tree) }}" method="POST" class="mb-3">
+                                @csrf
+                                <button type="submit" class="w-full bg-green-600 text-white px-4 py-3 rounded-lg font-bold hover:bg-green-700">🌱 Adopt This Tree</button>
+                            </form>
+                        @else
+                            <button type="button" class="w-full bg-gray-400 text-white px-4 py-3 rounded-lg font-bold cursor-not-allowed" disabled>🌱 Adopt (Sponsor to unlock)</button>
+                        @endif
+                    @elseif(session('user'))
+                        <button type="button" class="w-full bg-gray-400 text-white px-4 py-3 rounded-lg font-bold cursor-not-allowed" disabled>🌱 Adopt (Only regular accounts can adopt)</button>
                     @else
                         <a href="/login" class="block w-full bg-green-600 text-white px-4 py-3 rounded-lg font-bold hover:bg-green-700 text-center">🌱 Adopt This Tree</a>
                     @endif

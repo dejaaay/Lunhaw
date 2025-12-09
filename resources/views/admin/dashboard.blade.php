@@ -39,6 +39,13 @@
             </div>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-lg font-bold text-gray-900 mb-4">Organizations / Partners</h2>
+            <div class="space-y-2">
+                <a href="{{ route('admin.organizations') }}" class="block text-blue-600 hover:underline">View Organizations</a>
+                <a href="{{ route('admin.organizations.create') }}" class="block text-blue-600 hover:underline">Add Organization</a>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4">Tree Management</h2>
             <div class="space-y-2">
                 <a href="/trees" class="block text-blue-600 hover:underline">View All Trees</a>

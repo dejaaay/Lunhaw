@@ -7,6 +7,20 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+
+    public function partner()
+    {
+        $user = session('user');
+        if (!$user || ($user['role'] ?? null) !== 'ngo') {
+            return redirect('/login');
+        }
+        $userModel = User::find($user['id']);
+        $trees = $userModel->trees()->orderByDesc('planted_at')->get();
+        return view('dashboard.partner', [
+            'user' => $user,
+            'trees' => $trees,
+        ]);
+    }
     public function user()
     {
         $user = session('user');
