@@ -7,20 +7,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="font-sans bg-neutral-50 text-neutral-900">
-    <header class="border-b border-neutral-200 bg-white/70 backdrop-blur">
-      <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-2">
-          <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-800 text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
-          </span>
-          <span class="text-xl font-semibold">Lunhaw</span>
-        </a>
-      </div>
-    </header>
+    @include('components.navbar')
     <main class="container mx-auto px-4 py-16">
       <div class="max-w-3xl mx-auto text-center">
         <h1 class="text-4xl font-bold">Adopt or Sponsor</h1>
         <p class="mt-3 text-neutral-700">Fund tree planting directly or sponsor larger community reforestation efforts.</p>
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="/trees" class="px-6 py-3 rounded-md bg-green-800 text-white font-medium hover:bg-green-900">Browse Available Trees</a>
+          <a href="/trees/map" class="px-6 py-3 rounded-md border border-neutral-300 font-medium hover:bg-neutral-50">View on Map</a>
+        </div>
       </div>
     </main>
   </body>

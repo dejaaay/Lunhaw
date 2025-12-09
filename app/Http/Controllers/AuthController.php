@@ -22,8 +22,14 @@ class AuthController extends Controller
 
         $user = DB::table('users')->where('email', $data['email'])->first();
         if ($user && Hash::check($data['password'], $user->password)) {
-            session(['user' => ['id' => $user->id, 'email' => $user->email, 'name' => $user->name]]);
-            return redirect('/dashboard')->with('status', 'Logged in as user');
+            // Check if user is admin
+            if ($user->role === 'admin') {
+                session(['admin' => ['id' => $user->id, 'email' => $user->email, 'name' => $user->name]]);
+                return redirect('/admin')->with('status', 'Logged in as admin');
+            } else {
+                session(['user' => ['id' => $user->id, 'email' => $user->email, 'name' => $user->name]]);
+                return redirect('/dashboard')->with('status', 'Logged in successfully');
+            }
         }
 
         return back()->withErrors(['email' => 'Invalid credentials'])->withInput();
@@ -41,15 +47,13 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        $envEmail = env('ADMIN_EMAIL');
-        $envPasswordHash = env('ADMIN_PASSWORD_HASH');
-
-        if ($envEmail && $envPasswordHash && strtolower($data['email']) === strtolower($envEmail) && Hash::check($data['password'], $envPasswordHash)) {
-            session(['admin' => ['email' => $data['email']]]);
+        $user = DB::table('users')->where('email', $data['email'])->first();
+        if ($user && $user->role === 'admin' && Hash::check($data['password'], $user->password)) {
+            session(['admin' => ['id' => $user->id, 'email' => $user->email, 'name' => $user->name]]);
             return redirect('/admin')->with('status', 'Logged in as admin');
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials'])->withInput();
+        return back()->withErrors(['email' => 'Invalid admin credentials'])->withInput();
     }
 
     public function logout()

@@ -7,58 +7,58 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="font-sans bg-neutral-50 text-neutral-900">
-    <header class="sticky top-0 z-50 border-b border-neutral-200 bg-white/70 backdrop-blur">
-      <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-2">
-          <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-800 text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
-          </span>
-          <span class="text-xl font-semibold">Lunhaw</span>
-        </a>
-        <nav class="hidden md:flex items-center gap-6 text-sm text-neutral-700">
-          <a href="/adopt-sponsor" class="hover:text-neutral-900">Adopt Trees</a>
-          <a href="/adopt-sponsor" class="hover:text-neutral-900">Sponsor Projects</a>
-          <a href="/track" class="hover:text-neutral-900">Track Impact</a>
-          <a href="/insights" class="hover:text-neutral-900">View Reports</a>
-          <a href="/dashboard" class="hover:text-neutral-900">Dashboard</a>
-          <span class="inline-flex items-center gap-2">
-            <span class="text-neutral-600">{{ $user['name'] ?? $user['email'] }}</span>
-            <a href="/logout" class="px-3 py-1 rounded-md border text-sm bg-green-800 text-white">Logout</a>
-          </span>
-        </nav>
-      </div>
-    </header>
+    @include('components.navbar')
     <main>
       <section class="container mx-auto px-4 py-12">
         <h1 class="text-3xl font-semibold">Welcome, {{ $user['name'] ?? $user['email'] }}</h1>
-        <p class="mt-2 text-neutral-700">Here are your planted trees and sponsorships.</p>
+        <p class="mt-2 text-neutral-700">Here's your environmental impact at a glance.</p>
+
+        <div class="mt-8 grid md:grid-cols-3 gap-6">
+          <div class="rounded-[10px] bg-[#F7FCF5] border border-[#cce7c9] p-6 text-center">
+            <div class="text-3xl font-bold text-green-900">{{ $planted->count() }}</div>
+            <div class="text-sm text-green-800 mt-1">Trees Adopted</div>
+          </div>
+          <div class="rounded-[10px] bg-[#F7FCF5] border border-[#cce7c9] p-6 text-center">
+            <div class="text-3xl font-bold text-green-900">{{ $sponsorships->count() }}</div>
+            <div class="text-sm text-green-800 mt-1">Active Sponsorships</div>
+          </div>
+          <div class="rounded-[10px] bg-[#F7FCF5] border border-[#cce7c9] p-6 text-center">
+            <div class="text-3xl font-bold text-green-900">₱{{ number_format($sponsorships->sum('amount'), 2) }}</div>
+            <div class="text-sm text-green-800 mt-1">Total Sponsored</div>
+          </div>
+        </div>
 
         <div class="mt-8 grid md:grid-cols-2 gap-8">
           <div>
-            <h2 class="text-xl font-semibold">Your Planted Trees</h2>
-            <div class="mt-4 grid grid-cols-1 gap-4">
+            <h2 class="text-xl font-semibold mb-4">Your Adopted Trees</h2>
+            <div class="space-y-4">
               @forelse($planted as $t)
-                <div class="rounded-[10px] bg-[#F7FCF5] border border-[#cce7c9] p-5 text-green-800">
-                  <div class="font-semibold text-green-900">{{ $t->species }}</div>
-                  <div class="text-sm">{{ $t->location ?? 'Unknown location' }}</div>
-                  <div class="text-xs mt-1">Planted: {{ $t->planted_at ?? 'N/A' }}</div>
+                <div class="rounded-[10px] bg-white border border-neutral-200 p-5">
+                  <div class="font-semibold text-green-900">{{ $t->common_name ?? $t->species }}</div>
+                  <div class="text-sm text-neutral-600">{{ $t->location ?? 'Unknown location' }}</div>
+                  <div class="text-xs text-neutral-500 mt-1">Status: {{ ucfirst($t->status) }} | CO₂: {{ $t->co2_offset }}kg</div>
+                  <a href="{{ route('trees.show', $t) }}" class="text-green-700 text-sm hover:underline mt-2 inline-block">View details →</a>
                 </div>
               @empty
-                <p class="text-sm text-neutral-700">No planted trees yet.</p>
+                <p class="text-sm text-neutral-700">No adopted trees yet. <a href="/trees" class="text-green-700 hover:underline">Browse available trees</a></p>
               @endforelse
             </div>
           </div>
           <div>
-            <h2 class="text-xl font-semibold">Your Sponsorships</h2>
-            <div class="mt-4 grid grid-cols-1 gap-4">
+            <h2 class="text-xl font-semibold mb-4">Your Sponsorships</h2>
+            <div class="space-y-4">
               @forelse($sponsorships as $s)
-                <div class="rounded-[10px] bg-[#F7FCF5] border border-[#cce7c9] p-5 text-green-800">
-                  <div class="font-semibold text-green-900">{{ $s->species ?? 'Sponsored Tree' }}</div>
-                  <div class="text-sm">{{ $s->location ?? 'Unknown location' }}</div>
-                  <div class="text-xs mt-1">Amount: {{ $s->amount ? '₱'.number_format($s->amount,2) : 'N/A' }}</div>
+                <div class="rounded-[10px] bg-white border border-neutral-200 p-5">
+                  <div class="font-semibold text-green-900">{{ $s->common_name ?? $s->species ?? 'Tree Sponsorship' }}</div>
+                  <div class="text-sm text-neutral-600">{{ $s->location ?? 'Unknown location' }}</div>
+                  <div class="flex justify-between items-center mt-2">
+                    <span class="text-xs text-neutral-500">Amount: ₱{{ number_format($s->amount, 2) }}</span>
+                    <span class="text-xs px-2 py-1 rounded {{ $s->status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">{{ ucfirst($s->status) }}</span>
+                  </div>
+                  <a href="/trees/{{ $s->tree_id }}" class="text-green-700 text-sm hover:underline mt-2 inline-block">View tree →</a>
                 </div>
               @empty
-                <p class="text-sm text-neutral-700">No sponsorships yet.</p>
+                <p class="text-sm text-neutral-700">No sponsorships yet. <a href="/trees" class="text-green-700 hover:underline">Browse and sponsor trees</a></p>
               @endforelse
             </div>
           </div>
@@ -66,4 +66,4 @@
       </section>
     </main>
   </body>
-  </html>
+</html>

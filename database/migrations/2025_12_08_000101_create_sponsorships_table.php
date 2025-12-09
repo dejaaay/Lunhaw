@@ -12,10 +12,16 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('tree_id')->nullable();
             $table->decimal('amount', 10, 2)->nullable();
+            $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
+            $table->enum('payment_method', ['gcash', 'maya', 'bank_transfer', 'cash'])->nullable();
+            $table->string('transaction_reference')->nullable();
+            $table->dateTime('paid_at')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('tree_id')->references('id')->on('trees')->onDelete('set null');
+            $table->index(['status', 'user_id']);
         });
     }
 

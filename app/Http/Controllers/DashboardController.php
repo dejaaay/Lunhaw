@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -13,6 +14,9 @@ class DashboardController extends Controller
             return redirect('/login');
         }
 
+        // Get the actual user model with relationships
+        $userModel = User::find($user['id']);
+
         $planted = DB::table('trees')
             ->where('user_id', $user['id'] ?? null)
             ->select('id','species','location','planted_at')
@@ -22,7 +26,7 @@ class DashboardController extends Controller
         $sponsorships = DB::table('sponsorships')
             ->where('sponsorships.user_id', $user['id'] ?? null)
             ->join('trees','sponsorships.tree_id','=','trees.id')
-            ->select('sponsorships.id','sponsorships.amount','trees.species','trees.location')
+            ->select('sponsorships.id','sponsorships.amount','sponsorships.status','trees.species','trees.location','trees.id as tree_id','trees.common_name')
             ->orderByDesc('sponsorships.created_at')
             ->get();
 

@@ -10,39 +10,7 @@
     @endif
   </head>
   <body class="font-sans bg-neutral-50 text-neutral-900">
-    <header class="sticky top-0 z-50 border-b border-neutral-200 bg-white/70 backdrop-blur">
-      <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-2">
-          <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-800 text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
-              <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
-            </svg>
-          </span>
-          <span class="text-xl font-semibold">Lunhaw</span>
-        </a>
-        <nav class="hidden md:flex items-center gap-6 text-sm text-neutral-700">
-          <a href="/adopt-sponsor" class="hover:text-neutral-900">Adopt Trees</a>
-          <a href="/adopt-sponsor" class="hover:text-neutral-900">Sponsor Projects</a>
-          <a href="/track" class="hover:text-neutral-900">Track Impact</a>
-          <a href="/insights" class="hover:text-neutral-900">View Reports</a>
-          @if(session('admin') || session('user'))
-            <span class="inline-flex items-center gap-2">
-              <span class="text-neutral-600">{{ session('admin.email') ?? session('user.name') ?? session('user.email') }}</span>
-              <a href="/logout" class="px-3 py-1 rounded-md border text-sm">Logout</a>
-            </span>
-          @else
-            <a href="/login" class="hover:text-neutral-900">Login</a>
-            <a href="/register" class="hover:text-neutral-900">Register</a>
-            <a href="/admin/login" class="hover:text-neutral-900">Admin</a>
-          @endif
-        </nav>
-        <div class="flex items-center gap-2">
-          <a href="/adopt-sponsor" class="px-4 py-2 rounded-md bg-green-800 text-white text-sm">Sponsor Now</a>
-          <a href="/login" class="px-4 py-2 rounded-md border border-neutral-300 text-sm">Login</a>
-        </div>
-      </div>
-    </header>
+    @include('components.navbar')
     <main>
       <section class="bg-gradient-to-b from-green-50 to-white">
         <div class="container mx-auto px-4 py-16">
