@@ -24,10 +24,10 @@ class AuthController extends Controller
         if ($user && Hash::check($data['password'], $user->password)) {
             // Check if user is admin
             if ($user->role === 'admin') {
-                session(['admin' => ['id' => $user->id, 'email' => $user->email, 'name' => $user->name]]);
+                session(['admin' => ['id' => $user->id, 'email' => $user->email, 'name' => $user->name, 'role' => $user->role]]);
                 return redirect('/admin')->with('status', 'Logged in as admin');
             } else {
-                session(['user' => ['id' => $user->id, 'email' => $user->email, 'name' => $user->name]]);
+                session(['user' => ['id' => $user->id, 'email' => $user->email, 'name' => $user->name, 'role' => $user->role]]);
                 return redirect('/dashboard')->with('status', 'Logged in successfully');
             }
         }
@@ -49,7 +49,7 @@ class AuthController extends Controller
 
         $user = DB::table('users')->where('email', $data['email'])->first();
         if ($user && $user->role === 'admin' && Hash::check($data['password'], $user->password)) {
-            session(['admin' => ['id' => $user->id, 'email' => $user->email, 'name' => $user->name]]);
+            session(['admin' => ['id' => $user->id, 'email' => $user->email, 'name' => $user->name, 'role' => $user->role]]);
             return redirect('/admin')->with('status', 'Logged in as admin');
         }
 
@@ -88,7 +88,7 @@ class AuthController extends Controller
             'updated_at' => now(),
         ]);
 
-        session(['user' => ['id' => $id, 'email' => $data['email'], 'name' => $data['name']]]);
+        session(['user' => ['id' => $id, 'email' => $data['email'], 'name' => $data['name'], 'role' => 'user']]);
         return redirect('/dashboard')->with('status', 'Registered and logged in');
     }
 }

@@ -45,14 +45,14 @@ class TreeController extends Controller
     // Admin: Create tree form
     public function create()
     {
-        $this->authorize('isManager');
+        // Access controlled by EnsureAdmin middleware on admin routes
         return view('trees.create');
     }
 
     // Admin: Store tree
     public function store(Request $request)
     {
-        $this->authorize('isManager');
+        // Access controlled by EnsureAdmin middleware on admin routes
 
         $validated = $request->validate([
             'species' => 'required|string|max:100',
@@ -76,14 +76,14 @@ class TreeController extends Controller
     // Admin: Edit tree form
     public function edit(Tree $tree)
     {
-        $this->authorize('isManager');
+        // Access controlled by EnsureAdmin middleware on admin routes
         return view('trees.edit', compact('tree'));
     }
 
     // Admin: Update tree
     public function update(Request $request, Tree $tree)
     {
-        $this->authorize('isManager');
+        // Access controlled by EnsureAdmin middleware on admin routes
 
         $validated = $request->validate([
             'species' => 'required|string|max:100',
@@ -108,7 +108,7 @@ class TreeController extends Controller
     // Admin: Delete tree
     public function destroy(Tree $tree)
     {
-        $this->authorize('isManager');
+        // Access controlled by EnsureAdmin middleware on admin routes
         $tree->delete();
         return redirect()->route('trees.index')->with('success', 'Tree deleted successfully');
     }
@@ -116,7 +116,7 @@ class TreeController extends Controller
     // Upload photo for tree
     public function uploadPhoto(Request $request, Tree $tree)
     {
-        $this->authorize('isManager');
+        // Access controlled by EnsureAdmin middleware on admin routes
 
         $validated = $request->validate([
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',

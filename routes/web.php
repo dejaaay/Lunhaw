@@ -55,8 +55,8 @@ Route::get('/trees/{tree}', [TreeController::class, 'show'])->name('trees.show')
 Route::get('/trees/map', [TreeController::class, 'map'])->name('trees.map');
 Route::get('/api/trees/map-data', [TreeController::class, 'getMapData'])->name('api.trees.map');
 
-// Admin Tree Management
-Route::middleware('web')->group(function () {
+// Admin Tree Management (admin-only)
+Route::middleware(['web', \App\Http\Middleware\EnsureAdmin::class])->group(function () {
     Route::get('/admin/trees/create', [TreeController::class, 'create'])->name('trees.create');
     Route::post('/admin/trees', [TreeController::class, 'store'])->name('trees.store');
     Route::get('/admin/trees/{tree}/edit', [TreeController::class, 'edit'])->name('trees.edit');
