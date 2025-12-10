@@ -16,6 +16,10 @@ class AdoptionController extends Controller
             return redirect('/login')->with('error', 'Please login to adopt a tree');
         }
 
+        $validated = $request->validate([
+            'confirm' => 'required|in:1',
+        ]);
+
         // Check if already adopted
         $existing = Adoption::where('user_id', $user['id'] ?? $user->id)
             ->where('tree_id', $tree->id)

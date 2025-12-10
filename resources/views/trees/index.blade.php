@@ -87,11 +87,15 @@
                             @else
                                 <div class="mt-4 flex gap-2">
                                     <a href="{{ route('trees.show', $tree) }}" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded text-center hover:bg-blue-700">View Details</a>
-                                    @if(session('user'))
-                                        <a href="{{ route('sponsorships.create', $tree) }}" class="flex-1 bg-green-600 text-white px-4 py-2 rounded text-center hover:bg-green-700">Sponsor</a>
-                                    @else
-                                        <a href="/login" class="flex-1 bg-green-600 text-white px-4 py-2 rounded text-center hover:bg-green-700">Sponsor</a>
-                                    @endif
+                                        @if(session('user'))
+                                            <form action="{{ route('adoptions.store', $tree) }}" method="POST" class="flex-1" data-confirm="Are you sure you want to adopt this tree?">
+                                                @csrf
+                                                <input type="hidden" name="confirm" value="1">
+                                                <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Adopt</button>
+                                            </form>
+                                        @else
+                                            <a href="/login" class="flex-1 bg-green-600 text-white px-4 py-2 rounded text-center hover:bg-green-700">Sponsor</a>
+                                        @endif
                                 </div>
                             @endif
                         </div>

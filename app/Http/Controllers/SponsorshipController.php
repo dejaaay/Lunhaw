@@ -25,6 +25,7 @@ class SponsorshipController extends Controller
         $validated = $request->validate([
             'amount' => 'required|numeric|min:10|max:100000',
             'payment_method' => 'required|in:gcash,maya,bank_transfer,cash',
+            'confirm' => 'required|in:1',
         ]);
 
         $sponsorship = Sponsorship::create([
@@ -57,6 +58,10 @@ class SponsorshipController extends Controller
         if (!$user || $sponsorship->user_id !== $user['id']) {
             return redirect('/login');
         }
+
+        $validated = $request->validate([
+            'confirm' => 'required|in:1',
+        ]);
 
         // Simulate payment processing
         $sponsorship->update([

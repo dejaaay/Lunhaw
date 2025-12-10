@@ -121,8 +121,9 @@
                             $isSponsor = \App\Models\Sponsorship::where('user_id', session('user.id'))->where('status', 'completed')->exists();
                         @endphp
                         @if($isSponsor)
-                            <form action="{{ route('adoptions.store', $tree) }}" method="POST" class="mb-3">
+                            <form action="{{ route('adoptions.store', $tree) }}" method="POST" class="mb-3" data-confirm="Are you sure you want to adopt this tree?">
                                 @csrf
+                                <input type="hidden" name="confirm" value="1">
                                 <button type="submit" class="w-full bg-green-600 text-white px-4 py-3 rounded-lg font-bold hover:bg-green-700">🌱 Adopt This Tree</button>
                             </form>
                         @else

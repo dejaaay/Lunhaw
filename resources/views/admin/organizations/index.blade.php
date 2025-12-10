@@ -23,7 +23,7 @@
                     <td class="px-6 py-4 whitespace-nowrap">{{ $org->name }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ $org->email }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <a href="#" class="text-blue-600 hover:underline">Edit</a>
+                        <a href="{{ route('admin.organizations.edit', $org) }}" class="text-blue-600 hover:underline">Edit</a>
                     </td>
                 </tr>
                 @empty

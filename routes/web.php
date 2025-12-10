@@ -113,6 +113,8 @@ Route::middleware('web')->group(function () {
     Route::get('/admin/organizations', [AdminController::class, 'organizations'])->name('admin.organizations');
     Route::get('/admin/organizations/create', [AdminController::class, 'createOrganization'])->name('admin.organizations.create');
     Route::post('/admin/organizations', [AdminController::class, 'storeOrganization'])->name('admin.organizations.store');
+    Route::get('/admin/organizations/{user}/edit', [AdminController::class, 'editOrganization'])->name('admin.organizations.edit');
+    Route::put('/admin/organizations/{user}', [AdminController::class, 'updateOrganization'])->name('admin.organizations.update');
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/admin/users/create', [AdminController::class, 'createUser'])->name('admin.users.create');

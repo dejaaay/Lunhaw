@@ -14,8 +14,10 @@
             <p class="text-sm text-gray-600 mt-2">Current CO₂ Offset: <strong>{{ $tree->co2_offset }} kg</strong></p>
         </div>
 
-        <form action="{{ route('sponsorships.store', $tree) }}" method="POST" class="space-y-6">
+        <form action="{{ route('sponsorships.store', $tree) }}" method="POST" class="space-y-6" data-confirm="Confirm sponsorship of this tree?">
             @csrf
+
+            <input type="hidden" name="confirm" value="1">
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Sponsorship Amount (₱)</label>

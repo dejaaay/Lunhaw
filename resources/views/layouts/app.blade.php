@@ -71,3 +71,29 @@
     @yield('scripts')
 </body>
 </html>
+
+<script>
+// Global confirmation handler: only trigger for
+// - forms with `data-confirm` on submit
+// - anchors or buttons that themselves have `data-confirm` on click
+document.addEventListener('click', function(e) {
+    const el = e.target.closest('a[data-confirm], button[data-confirm], input[type="submit"][data-confirm]');
+    if (!el) return;
+    const msg = el.getAttribute('data-confirm') || 'Are you sure?';
+    if (!confirm(msg)) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+});
+
+document.addEventListener('submit', function(e) {
+    const form = e.target;
+    if (!(form instanceof HTMLFormElement)) return;
+    const msg = form.getAttribute('data-confirm');
+    if (msg) {
+        if (!confirm(msg)) {
+            e.preventDefault();
+        }
+    }
+});
+</script>

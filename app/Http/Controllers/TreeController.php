@@ -99,6 +99,7 @@ class TreeController extends Controller
             'planted_at' => 'nullable|date',
             'status' => 'in:planted,growing,mature',
             'co2_offset' => 'nullable|integer|min:0',
+            'confirm' => 'required|in:1',
         ]);
 
         $validated['user_id'] = auth()->id();

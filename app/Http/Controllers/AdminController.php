@@ -43,6 +43,7 @@ class AdminController extends Controller
             'email' => 'required|email|unique:users|max:191',
             'password' => 'required|string|min:6',
             'bio' => 'nullable|string',
+            'confirm' => 'required|in:1',
         ]);
         $validated['role'] = 'ngo';
         $validated['password'] = Hash::make($validated['password']);
@@ -106,6 +107,17 @@ class AdminController extends Controller
         return view('admin.users.edit', compact('user'));
     }
 
+    // Edit organization
+    public function editOrganization(User $user)
+    {
+        $admin = session('admin');
+        if (!$admin) {
+            return redirect('/admin/login');
+        }
+
+        return view('admin.organizations.edit', compact('user'));
+    }
+
     public function updateUser(Request $request, User $user)
     {
         $admin = session('admin');
@@ -127,6 +139,35 @@ class AdminController extends Controller
         ActivityLog::log('update_user', 'user', $user->id, "Updated user: {$user->name}");
 
         return redirect()->route('admin.users')->with('success', 'User updated successfully');
+    }
+
+    // Update organization
+    public function updateOrganization(Request $request, User $user)
+    {
+        $admin = session('admin');
+        if (!$admin) {
+            return redirect('/admin/login');
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|max:191|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:6',
+            'bio' => 'nullable|string',
+            'confirm' => 'required|in:1',
+        ]);
+
+        if (!empty($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+
+        $user->update($validated);
+
+        ActivityLog::log('update_organization', 'user', $user->id, "Updated organization: {$user->name}");
+
+        return redirect()->route('admin.organizations')->with('success', 'Organization updated successfully');
     }
 
     public function deleteUser(User $user)

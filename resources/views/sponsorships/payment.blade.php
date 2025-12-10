@@ -22,8 +22,9 @@
             </p>
         </div>
 
-        <form action="{{ route('sponsorships.process', $sponsorship) }}" method="POST" class="space-y-6">
+        <form action="{{ route('sponsorships.process', $sponsorship) }}" method="POST" class="space-y-6" data-confirm="Are you sure you want to complete this payment?">
             @csrf
+            <input type="hidden" name="confirm" value="1">
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Cardholder Name</label>
